@@ -1,0 +1,39 @@
+
+
+html, body{
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+#kek{
+	background: white;
+	width: 100vw;
+	height: 100vh;
+	position: relative;
+	z-index: -1;
+}
+div{
+	background: black;
+	position: absolute;
+}
+
+h1{
+	color: black;
+	font-size: 4em;
+	font-family: monospace;
+	margin:0;
+	align-self: center;
+	position: absolute;
+	text-align: center;
+	width: 100vw;
+	margin-top: 50vh
+}
+
+
+.ball{
+	position: absolute;
+	width: 5px;
+	background: #ff00ff77;
+	height: 5px;
+	border-radius: 100%
+}

@@ -1,0 +1,17 @@
+html, body{
+	margin: 0;
+	padding: 0
+}
+
+#main{
+	min-width: 100vw;
+	min-height: 100vh;
+}
+
+.ball{
+	position: absolute;
+	width: 5px;
+	background: #ff00ff77;
+	height: 5px;
+	border-radius: 100%
+}

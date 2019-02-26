@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+		<link rel="stylesheet" href="main.css">
+		<style>
+			body, html{
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				background: #000
+			}
+
+			#kek{
+				height: 100vh;
+				width: 100vw;
+			}
+
+			.dot{
+				position: absolute;
+				/* width: 2px;
+				height: 2px; */
+				width: 0px;
+				height: 0px;
+				background-color: red;
+				z-index: 0
+			}
+
+			.line{
+				position: absolute;
+				transform-origin: 0% 0%;
+				z-index: 99;
+				width:25%;
+				background: linear-gradient(to top left, transparent calc(50% - 1px), #fff, transparent calc(50% + 1px) )
+			}
+
+		</style>
+
+	</head>
+	<body>
+
+		<div id="kek">
+
+		</div>
+
+	</body>
+	<script>
+
+	$(document).ready(function () {
+
+
+
+	const time = 1000 / 60
+
+
+
+	function ran(max, min) {
+		return Math.floor(Math.random() * max) + min
+	}
+
+	function connectDot(d1, d2, id) {
+
+		var line = document.createElement("div")
+
+		line.setAttribute("id", "line" + id)
+		line.setAttribute("class", "line")
+		var tewidth = Math.abs(d1.x - d2.x)
+		var teheight = Math.abs(d1.y - d2.y)
+
+		var teleft  = (d1.x < d2.x) ? d1.x  : d2.x
+
+		var tetop = (d1.y < d2.y) ? d1.y  : d2.y
+		line.style.left = teleft + "px"
+		line.style.top = tetop + "px"
+
+		var hyp = Math.sqrt( ( tewidth**2 + teheight**2) )
+
+
+		line.style.width =  + tewidth +"px"
+		line.style.height =  + teheight +"px"
+
+		if ((d1.x<d2.x && d1.y > d2.y) || (d2.x<d1.x && d2.y>d1.y)) {
+			line.style.background = "linear-gradient(to top left, transparent calc(50% - 1px), #fff, transparent calc(50% + 1px) )"
+		} else {
+			line.style.background = "linear-gradient(to top right, transparent calc(50% - 1px), #fff, transparent calc(50% + 1px) )"
+		}
+
+
+		var deg = (tewidth / hyp) * 200
+
+		// line.style.transform = "rotate(" + (360-deg) + "deg)"
+		document.getElementById("kek").appendChild(line)
+
+	}
+
+	function makeBall(left, top, name) {
+
+		var k = document.createElement("div")
+		k.setAttribute("id", "dot" +name)
+		k.setAttribute("class", "dot")
+		k.style.left = left + "px"
+		k.style.top = top + "px"
+		document.getElementById("kek").appendChild(k)
+	}
+
+	function moveDot(dot, obj) {
+		var kekdot = document.getElementById("dot"+ dot[name])
+
+
+		ballname = "#dot" + dot['name']
+		xs = dot.xs
+		ys = dot.ys
+
+
+
+		var height = $("#"+dot.parent)[0].offsetHeight;
+		var width = $("#"+dot.parent)[0].offsetWidth;
+
+		var balldim = $(ballname)[0].offsetHeight;
+
+		var x1 = $(ballname)[0].offsetLeft
+		var x2 = $(ballname)[0].offsetTop
+
+
+
+		if (x1 >= 0 && x2 >= 0 && x2 < height && x1 < width) {
+			$("#dot" + dot['name'] ).css({
+				top: dot['y'] + dot['ys']+ "px",
+				left: dot['x'] + dot['xs'] + "px"
+			})
+
+		} else {
+
+
+			if (x2 >= height || x2 <= 0) {
+				obj[n]["ys"] = dot['ys'] * -1
+			}
+			if (x1 > width || x1 <= 0) {
+					obj[n]["xs"] = dot['xs'] * -1
+
+			}
+			xs = dot.xs
+			ys = dot.ys
+
+
+			$("#dot" + dot['name'] ).css({
+				top: dot['y'] + dot['ys']+ "px",
+				left: dot['x'] + dot['xs'] + "px"
+			})
+
+
+
+		}
+
+		$("#dot" + dot['name'] ).css({
+			top: dot['y'] + dot['ys']+ "px",
+			left: dot['x'] + dot['xs'] + "px"
+		})
+
+
+
+		obj[n]["y"] = dot['y'] + dot['ys']
+		obj[n]["x"] = dot['x'] + dot['xs']
+
+
+
+
+	}
+
+	function createballs(num, obj) {
+
+		for (var x = 0; x < num  ; x++) {
+
+			obj.push({
+				x: ran(800,10),
+				y: ran(800,10),
+				name: x,
+				xs: ran(4,2),
+				ys: ran(4,2),
+				ind: x,
+				parent: "kek"
+		})
+
+		}
+
+		for(n in obj) {
+
+			makeBall(obj[n].x, obj[n].y,  n)
+
+		}
+
+	}
+
+	var dots = []
+
+	var dots2 = []
+
+
+
+	createballs(3, dots)
+
+	// createballs(3, dots2)
+
+	function kek(obj) {
+
+		for(n in obj) {
+
+			moveDot( obj[n], obj )
+
+			$('.line').remove();
+
+			console.log()
+
+			for(n in obj) {
+
+				if(temp) {
+
+					connectDot(obj[n], temp, toString(obj) + n )
+				}
+
+
+				var temp = obj[n]
+
+
+			}
+		}
+	}
+
+
+	setInterval(() => {
+
+		// kek(dots2)
+		kek(dots)
+
+
+	}, time);
+
+
+	})
+
+
+
+
+	</script>
+</html>
