@@ -1,32 +1,21 @@
 var windowWidth = document.getElementById('kek').clientWidth
 var windowHeight = document.getElementById('kek').clientHeight
 
-function ran(max, min) {
-	return Math.floor(Math.random() * max) + min
-}
-function range(max) {
-	var ar = [];
-	var index = 0;
-	while (index < max) {
-		ar.push(index);
-		index++
-	}
-	return ar
-}
 
+function ran(max, min) {return Math.floor(Math.random() * max) + min}
 
-
+function range(max) {var ar = [];var index = 0;while(index < max) {ar.push(index); index++ }return ar}
 
 var balls = {
-	ballNumber: 0, // Number of balls in the array
+	ballNumber: 0,// Number of balls in the array
 	balls: [], // Array with ball objects 
 	fatherEl: 'kek', // Element with the elements in them
-	addball(xpos, ypos, width, height, xspeed, yspeed, col) { // Adds a ball to an array to the parent element and and to the number of balls
+	addball(xpos, ypos, width, height, xspeed, yspeed, col) {// Adds a ball to an array to the parent element and and to the number of balls
 		var ball = {
 			id: "ball" + this.ballNumber,
 			width: 1 || width,
 			height: 1 || height,
-			xspeed: 0 || xspeed,
+			xspeed: 0 ||xspeed,
 			yspeed: 0 || yspeed,
 			xpos: 0 || xpos,
 			ypos: 0 || ypos,
@@ -39,8 +28,8 @@ var balls = {
 			},
 
 			moveBall(pX, pY) {
-
-				this.ypos = pY
+				
+				this.ypos =  pY
 				this.xpos = pX
 
 				this.ballPosition()
@@ -50,15 +39,15 @@ var balls = {
 
 		var newball = document.createElement('div')
 		newball.setAttribute('id', ball.id)
-		newball.setAttribute('class', 'ball')
-		newball.style.col = "#" + this.col
+		newball.setAttribute('class', 'ball')	
+		newball.style.col = "#" + this.col	
 		document.getElementById('kek').appendChild(newball)
 
 		// pushes ball into array 
 		this.balls.push(ball)
 		// adds one to the number of balls in the array index
 		this.ballNumber += 1
-
+		
 		this.__drawBall__()
 	},
 	__drawBall__() {
@@ -71,38 +60,27 @@ var balls = {
 }
 
 
-
-
-var length = 1	000
-for (n in range(length)) {
-	balls.addball(0, 0)
+var length = 100
+for (n in range(length)){
+	balls.addball(300, 500)
 }
 
-var kek = Math.PI+ 0.1
-
-var mid = (windowWidth / length)
 
 
-
+const g = 8
+function kek(ball) {
+	ball.ypos -= g
+}
 
 
 setInterval(() => {
 
 	for (n in balls.balls) {
-		balls.balls[n].moveBall(n * mid, (windowHeight / 2 - 5) + (windowHeight / 2 - 5) * Math.sin(n * kek) )
+		console.log(balls.balls[n]);
+		
+		kek(balls.balls[n])
 	}
 
-	// for (n in balls.balls) {
-	// 	balls.balls[n].moveBall(n * (windowWidth / length), (windowHeight / 2 - 1) + (windowHeight / 2 - 1) * Math.tan(n * kek))
-	// }
+},100);
 
-
-
-	kek+= 0.001  
-
-}, 10);
-
-
-
-
-
+	
