@@ -73,23 +73,23 @@ var balls = {
 
 
 
-var length = 900
+var length = 5000
 for (n in range(length)) {
 	balls.addball(0, 0)
 }
 
-var kek = 0
+var kek = Math.PI+ 0.1
 
 var mid = (windowWidth / length)
 
-var tek = (windowHeight / 2 - 5)
+
 
 
 
 setInterval(() => {
 
 	for (n in balls.balls) {
-		balls.balls[n].moveBall(n * mid, tek + tek * Math.sin(n * kek) )
+		balls.balls[n].moveBall(n * mid, (windowHeight / 2 - 5) + (windowHeight / 2 - 5) * Math.sin(n * kek) )
 	}
 
 	// for (n in balls.balls) {
@@ -98,7 +98,7 @@ setInterval(() => {
 
 
 
-	kek += 1 
+	kek+= 0.001  
 
 }, 10);
 
