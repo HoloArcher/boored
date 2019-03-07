@@ -1,32 +1,14 @@
-body{
-padding: 0;
-margin: 0;
-width: 100vw;
-height: 100vh;
-overflow-x: hidden;
-}
-
-#canvas{
-	position: fixed;
+body {
 	padding: 0;
 	margin: 0;
+	width: 100vw;
+	height: 100vh;
 	background: black;
+	overflow: hidden;
+}
+
+#canvas {
+	padding: 0;
+	margin: 0;
 	z-index: -1
-
-
-
 }
-
-
-.main{
-	width: 60%;
-	min-height: 1000px;
-	/* overflow-y: scroll;  */
-	background: transparent;
-	z-index: 100;
-	position: absolute;
-	color: white;
-	padding: 5% 20%;
-	font-size: 2em;
-}
-

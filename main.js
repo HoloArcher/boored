@@ -1,34 +1,38 @@
-
 var canvas = document.querySelector('canvas');
 
-const innerWidth = window.innerWidth
-const innerWHeight = window.innerHeight
+const innerWidth = document.body.clientWidth
+const innerWHeight = document.body.clientHeight
+
 canvas.width = innerWidth
 canvas.height = innerWHeight
 
-var c = canvas.getContext('2d')
+
+
+
+var c = canvas.getContext("2d")
+
 
 
 
 function Ball(x, y, sx, sy, radius) {
 	this.x = x;
 	this.y = y;
-	this.color = '#000000';
+	this.color = '#ffffff';
 	this.sx = sx;
 	this.sy = sy;
-	this.col = '#ffffff'
 
 	this.radius = radius
 	this.draw = function () {
-
 		c.beginPath()
 		c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
 		c.fillStyle = this.color
 		c.fill()
+
 		c.strokeStyle = this.color;
 		c.stroke();
 	}
 	this.update = function (xspeed, yspeed) {
+
 
 		if (innerWidth <= this.x + this.radius || (this.x - this.radius) <= 0) {
 			this.sx *= -1
@@ -39,25 +43,19 @@ function Ball(x, y, sx, sy, radius) {
 		this.x += this.sx
 		this.y += this.sy
 
-		// this.draw()
+
+
+		this.draw()
 	}
 	this.connect = function (ball, col) {
 		c.beginPath()
 		c.moveTo(this.x, this.y)
 		c.lineTo(ball.x, ball.y)
-		c.strokeStyle = '#ffffff'
+		c.strokeStyle = col
 		c.stroke()
 
-		// this.draw()
+		this.draw()
 
-	}
-	this.col = function(col) {
-		this.color = col
-	}
-	this.set = function(x,y){
-		this.x = x
-		this.y = y
-		// this.draw()
 	}
 
 }
@@ -70,7 +68,7 @@ function ran(min, max) {
 
 var balls = []
 var kek = 0
-var length = 1000;
+var length = 100;
 var tek = (innerHeight / 2 - 2)
 
 var mid = (innerWidth / length)
@@ -91,11 +89,11 @@ var sy1 = () => {return ran(-2, 4)/3}
 	
 // }
 
-// for (let index = 0; index < length; index++) { 
-// 	var sss = new Ball(x(), y(), sx1(), sy1(), 2)
-// 	balls.push(sss)
+for (let index = 0; index < length; index++) { 
+	var sss = new Ball(x(), y(), sx1(), sy1(), 2)
+	balls.push(sss)
 	
-// }
+}
 
 for (let index = 0; index < length; index++) {
 	var temp = new Ball(x(), y(), sx(), sy(), 1)
@@ -105,7 +103,7 @@ for (let index = 0; index < length; index++) {
 
 
 
-var dist = 10
+var dist = 50
 // var af = 4
 
 // var temp = new Ball(8, 9, 0, 0, 0)
@@ -126,24 +124,18 @@ function dudu(x, y) {
 
 			if (Math.abs(el.x - x) < dist && Math.abs(el.y - y) < dist) {
 
-				// if (Math.abs(el.x - el2.x) < dist && Math.abs(el.y - el2.y) < dist ** af > 1) {
+				if (Math.abs(el.x - el2.x) < dist && Math.abs(el.y - el2.y) < dist ** af > 1) {
 
-				// 	el2.connect(el, '#fffffff')
-				// 	af--
+					el2.connect(el, '#fffffff')
+					af--
 
-				// }
-				// if (Math.abs(el.x - el2.x) < dist + 150 && Math.abs(el.y - el2.y) < dist + 150 ) {
+				}
+				else if (Math.abs(el.x - el2.x) < dist + 150 && Math.abs(el.y - el2.y) < dist + 150 ) {
 
-				// 	el2.connect(el, '#ffffff30')
-				// 	// af--
+					el2.connect(el, '#ffffff30')
+					af--
 
-				// }
-
-			}
-			if (Math.abs(el.x - el2.x) < dist + 400 && Math.abs(el.y - el2.y) < dist + 500 ) {
-
-			el2.connect(el, '#ffffff30')
-			// af--
+				}
 
 			}
 
@@ -168,7 +160,7 @@ function asdf(e) {
 
 document.body.addEventListener('mousemove', asdf)
 
-var eek = 1
+
 function animate() {
 	document.body.event
 	requestAnimationFrame(animate)
@@ -183,35 +175,34 @@ function animate() {
 	// })
 
 	// for connecting every ball to ajecent if lcose engough
-	
-	var kd = true
-	for(let n = 1; n <= balls.length; n+=1) {
 
+	balls.forEach(el => {
 		
-		const el = balls[n]
+ 
+		el.update()
+	// dudu(cx, cy)
 
 
-		
-		// if(balls[n+1]) {
-		// 	el.connect(balls[n+1])
-		// } 
-		// el.set(innerWidth/balls.length * n , innerHeight/2 )
-		
-		// el.set(innerWidth/balls.length * n, innerHeight )
-		el.set(innerWidth/balls.length * n, innerHeight )
-		el.connect(balls[n + 1] )
-			
-		// el.update()
+
+		balls.forEach(el2 => {
 
 
-		el.set(innerWidth/balls.length *n,innerHeight/3 * Math.sin(n/length/1000 * eek) + innerHeight/2 )
-		// el.set(innerWidth/balls.length * n, innerHeight/3 * Math.sin(n/length/100000 * eek) + innerHeight/2 )
+			if(Math.abs(el.x - el2.x) < dist  && Math.abs(el.y - el2.y) < dist ) {			
 
-		
-		eek+= 1
-		// el.draw()
-	}
+				el.connect(el2, '#ffffff')
+			}
 
+			else if(Math.abs(el.x - el2.x) < dist*2  && Math.abs(el.y - el2.y) < dist*2 ) {			
+
+				el.connect(el2, '#ffffff20')
+			}
+
+		})
+
+ 
+
+
+	});
 
 }
 
