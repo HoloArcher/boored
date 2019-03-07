@@ -28,5 +28,12 @@ overflow-x: hidden;
 	color: white;
 	padding: 5% 20%;
 	font-size: 2em;
+	background-color: #000000a0
 }
 
+a{
+	color: white;
+	font-family: 'Courier New', Courier, monospace;
+	text-decoration: none;
+	font-weight: bold;
+}
