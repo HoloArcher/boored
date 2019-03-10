@@ -1,4 +1,3 @@
-
 var canvas = document.querySelector('canvas');
 
 const innerWidth = window.innerWidth
@@ -8,12 +7,10 @@ canvas.height = innerWHeight
 
 var c = canvas.getContext('2d')
 
-
-
 function Ball(x, y, sx, sy, radius) {
 	this.x = x;
 	this.y = y;
-	this.color = '#000000';
+	this.color = '#ffffff';
 	this.sx = sx;
 	this.sy = sy;
 	this.col = '#ffffff'
@@ -67,14 +64,9 @@ function ran(min, max) {
 	return Math.floor(Math.random() * max) + min;
 }
 
-
 var balls = []
 var kek = 0
 var length = 1000;
-var tek = (innerHeight / 2 - 2)
-
-var mid = (innerWidth / length)
-
 var radius = ran(10, 30)
 var x = () => {return ran(radius, innerWidth - radius) } 
 var y = () => {return ran(radius, innerHeight - radius)}
@@ -83,32 +75,12 @@ var sy = () => {return ran(-15, 30)/2}
 var sx1	 = () => {return ran(-2, 4)/3}
 var sy1 = () => {return ran(-2, 4)/3}
 
-
-
-// for (let index = 0; index < length; index++) { 
-// 	var fff = new Ball(x(), y(), sx1(), sy(), 5)
-// 	balls.push(fff)
-	
-// }
-
-// for (let index = 0; index < length; index++) { 
-// 	var sss = new Ball(x(), y(), sx1(), sy1(), 2)
-// 	balls.push(sss)
-	
-// }
-
 for (let index = 0; index < length; index++) {
-	var temp = new Ball(x(), y(), sx(), sy(), 1)
+	var temp = new Ball(x(), y(), sx(), sy(), 2)
 	balls.push(temp)
 }
 
-
-
-
 var dist = 10
-// var af = 4
-
-// var temp = new Ball(8, 9, 0, 0, 0)
 
 function dudu(x, y) {
 	temp.x = x
@@ -116,36 +88,32 @@ function dudu(x, y) {
 
 	c.clearRect(0, 0, innerWidth, innerHeight)
 
-
-
 	balls.forEach(el => {
 		af = 2
-
-
 		balls.forEach(el2 => {
 
 			if (Math.abs(el.x - x) < dist && Math.abs(el.y - y) < dist) {
 
-				// if (Math.abs(el.x - el2.x) < dist && Math.abs(el.y - el2.y) < dist ** af > 1) {
+				if (Math.abs(el.x - el2.x) < dist && Math.abs(el.y - el2.y) < dist ** af > 1) {
 
-				// 	el2.connect(el, '#fffffff')
-				// 	af--
+					el2.connect(el, '#fffffff')
+					af--
 
-				// }
-				// if (Math.abs(el.x - el2.x) < dist + 150 && Math.abs(el.y - el2.y) < dist + 150 ) {
+				}
+				if (Math.abs(el.x - el2.x) < dist + 150 && Math.abs(el.y - el2.y) < dist + 150 ) {
 
-				// 	el2.connect(el, '#ffffff30')
-				// 	// af--
+					el2.connect(el, '#ffffff30')
+					// af--
 
-				// }
-
-			}
-			if (Math.abs(el.x - el2.x) < dist + 400 && Math.abs(el.y - el2.y) < dist + 500 ) {
-
-			el2.connect(el, '#ffffff30')
-			// af--
+				}
 
 			}
+			// if (Math.abs(el.x - el2.x) < dist + 400 && Math.abs(el.y - el2.y) < dist + 500 ) {
+
+			// el2.connect(el, '#ffffff30')
+			// // af--
+
+			// }
 
 		})
 		
@@ -157,11 +125,14 @@ function dudu(x, y) {
 }
 
 
+function g(x) {
+	return x/ Math.abs(x)
+
+}
 var cx;
 var cy;
 
 function asdf(e) {
-	// dudu(e.clientX, e.clientY)
 	cx = e.clientX
 	cy = e.clientY
 }
@@ -169,47 +140,55 @@ function asdf(e) {
 document.body.addEventListener('mousemove', asdf)
 
 var eek = 1
+
+var xd = new Ball(1, innerHeight/2, 0, 0, 2)
 function animate() {
 	document.body.event
-	requestAnimationFrame(animate)
-
-
+	// requestAnimationFrame(animate)
 	c.clearRect(0, 0, innerWidth, innerHeight)
 
-	// balls.forEach(el => {
-
-		// el.update()
-
-	// })
-
-	// for connecting every ball to ajecent if lcose engough
-	
-	var kd = true
-	for(let n = 1; n <= balls.length; n+=1) {
-
-		
+	for(let n = 0; n < balls.length; n+=1) {	
 		const el = balls[n]
 
-
-		
-		// if(balls[n+1]) {
-		// 	el.connect(balls[n+1])
-		// } 
 		// el.set(innerWidth/balls.length * n , innerHeight/2 )
 		
 		// el.set(innerWidth/balls.length * n, innerHeight )
-		el.set(innerWidth/balls.length * n, innerHeight )
-		el.connect(balls[n + 1] )
-			
+		// el.set(innerWidth/balls.length * n, innerHeight )
 		// el.update()
 
-
-		el.set(innerWidth/balls.length *n,innerHeight/3 * Math.sin(n/length/1000 * eek) + innerHeight/2 )
-		// el.set(innerWidth/balls.length * n, innerHeight/3 * Math.sin(n/length/100000 * eek) + innerHeight/2 )
-
 		
-		eek+= 1
-		// el.draw()
+		// connect all balls in line
+
+	
+
+		// el.connect(xd)
+		// xd.update()
+
+		var sizy = 500
+
+		var k = sizy/4
+		// if(balls[n+1]) {
+		// 	el.connect(balls[n+1])
+		// } 
+
+		var x = n
+
+		var fun = Math.pow(-1, x ) * Math.sqrt( (k*k) +(-1 * Math.pow(g(x)*x - g(k)*k, 2) )) 
+
+		// el.set(innerWidth/balls.length * n, innerHeight/3 * Math.sin(n/length/1000 * eek) + innerHeight/2 )
+		el.set(sizy/balls.length * n*2, k +100+ fun )
+		// el.set(innerWidth/balls.length * n, innerHeight/3 * Math.sin(n/length/100 * eek) + innerHeight/2 )
+
+		// console.log(Math.pow(-1, n ) * Math.sqrt( (k*k) +(-1 * Math.pow(g(n) - g(k), 2) )) )
+		// console.log();
+		
+		// console.log(g);
+		
+		
+		// eek+= Math.PI
+
+
+		el.draw()
 	}
 
 
