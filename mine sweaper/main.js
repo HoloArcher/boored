@@ -8,7 +8,7 @@ var c = canvas.getContext('2d')
 
 
 const config = {
-	'size': 15,
+	'size': 30,
 	'debug': false
 }
 
@@ -55,14 +55,18 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 	
 
 	this.draw = function () {
+
 		if (config.debug) {
 			
 			if(this.is_bomb) { 
+				c.beginPath()
 				c.moveTo(this.x, this.y)
 				c.lineTo(this.x + this.size/2 , this.y + this.size/2)
 				this.nearBombs = 0
+				c.closePath()
 			}
 			if(this.nearBombs) {
+				c.beginPath()
 				c.font = '20px calibri'
 				c.fillStyle = '#000000'
 				c.fillText(this.nearBombs, this.x + this.size/2, this.y + this.size/2)
@@ -72,23 +76,19 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 		}
 
 		if(this.is_shown && !this.is_marked) {
+			c.beginPath()
 			c.fillStyle = '#ffffff'
 			c.strokeStyle = '#000000'
-			c.beginPath()
-
 			c.fillRect(this.x, this.y, this.size/2, this.size/2)
 			c.rect(this.x, this.y, this.size/2, this.size/2)
-			c.closePath()
-
 			c.stroke()
-
-
-		
+			c.closePath()
 		} else {
 			c.beginPath()
 			c.fillStyle = '#000000'
 			c.fillRect(this.x, this.y, this.size/2, this.size/2)
 			c.stroke()
+			c.closePath()
 
 		}
 	}
@@ -96,6 +96,8 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 		if(this.is_bomb) {
 			c.beginPath()
 
+			c.fillStyle = '#000000'
+			c.strokeStyle = '#000000'
 			c.moveTo(this.x, this.y)
 			c.lineTo(this.x + this.size/2 , this.y + this.size/2)
 			c.stroke()
@@ -109,19 +111,19 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 
 		this.is_shown = true
 		
-		c.closePath()
-		c.stroke()
+		// c.stroke()
 	}
 	this.check = function(){
 
 		if (this.is_bomb && !this.is_marked) {
+			c.beginPath()
 			c.moveTo(0 , 0)
 			c.font = '100px calibri'
 			c.fillStyle = '#000000'
 			c.strokeStyle = '#000000'
 			c.fillRect(300,300, 1000, 300)
 			c.fillStyle = '#ffffff'
-			c.fillText("you fucking loser!!!", 300, 500)
+			c.fillText("you LOSE!!!", 300, 500)
 			c.stroke()
 			c.closePath()
 			this.reveal()
@@ -131,17 +133,13 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 			this.is_shown = true
 	
 			if(this.nearBombs > 0) {
-
 				this.draw()
-
+				c.beginPath()
 				c.font = '20px calibri'
-
 				c.fillStyle = '#000000'
 				c.fillText(this.nearBombs, this.x , this.y + this.size/2)
-
 				c.stroke()
 				c.closePath()	
-
 			} 
 
 			//if no bombs it will recursivly check nearby fields
@@ -180,8 +178,18 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 
 var balls = []
 var length = config.size
+
 var count = Math.pow(config.size, 2)
+
+
+
 function createField() {
+	c = canvas.getContext('2d')
+	// console.log(c.fillStyle, c.strokeStyle);
+
+	
+	
+
 	for (let index = 0; index < length; index++) {
 		balls[index] = []
 		
@@ -190,14 +198,15 @@ function createField() {
 			let bomb = false
 			var chance = Math.floor(Math.random() * count)
 			
-			if(chance < 20){
+			if(chance < 100){
 				bomb = true
 			}
 			
+			
 
-			var width = innerHeight / length 
+			var width = innerHeight / length *2 
 			var x = width / 2 * index
-			var y = i2 * width / 2
+			var y = i2 * width /2
 			
 			balls[index].push(new Piece(x, y, width, bomb, 0, index, i2))
 		}
@@ -205,6 +214,7 @@ function createField() {
 	
 	
 	// counts the number of ajacent bombs for every piece
+	c.strokeStyle = '#000000'
 	for (let i = 0; i < balls.length; i++) {
 		for (let n = 0; n < balls.length; n++) {
 			if (balls[i][n].is_bomb) {
@@ -243,7 +253,25 @@ function clicky(x, y) {
 				//checks y of mouseclick
 				if(by <= y && by + ball.size/2 > y){
 
-					ball.check()
+					// if you land on a bomb on first press gets reset
+					if((ball.nearBombs > 0 || ball.is_bomb) && firstPress) {
+						console.log('kek');
+						c.beginPath()
+						c.fillStyle = '#000000'
+						c.strokeStyle = '#ffffff'
+						c.fillRect(0,0,innerWidth,innerHeight)
+						c.closePath()
+
+
+
+						firstPress = true
+						createField()
+
+						clicky(x, y)
+					} else{
+						ball.check()
+						firstPress = false
+					}
 					
 				}
 			}
@@ -263,9 +291,9 @@ function rightClick(x, y) {
 			by = ball.y
 
 			//checks x position of the mouseklick
-			if(bx <= x && bx + ball.size/2 > x){	
+			if(bx-6 <= x && bx + ball.size/2-6 > x){	
 				//checks y of mouseclick
-				if(by <= y && by + ball.size/2 > y){
+				if(by-6 <= y && by + ball.size/2-6 > y){
 
 					ball.mark()
 					
@@ -276,6 +304,7 @@ function rightClick(x, y) {
 }
 
 createField()
+
 
 
 for (let i = 0; i < balls.length; i++) {
@@ -289,7 +318,9 @@ for (let i = 0; i < balls.length; i++) {
 
 
 // onclick handler
+var firstPress = true
 document.getElementById('main').onclick = el => clicky(el.x, el.y)
+// document.getElementById('main').onclick = el => clicky(el.x, el.y)
 window.oncontextmenu = function(e)
 {
 	rightClick(e.x, e.y)
@@ -297,4 +328,3 @@ window.oncontextmenu = function(e)
     return false;     // cancel default menu
 }
 
-	
