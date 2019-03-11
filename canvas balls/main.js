@@ -144,7 +144,7 @@ var eek = 1
 var xd = new Ball(1, innerHeight/2, 0, 0, 2)
 function animate() {
 	document.body.event
-	// requestAnimationFrame(animate)
+	requestAnimationFrame(animate)
 	c.clearRect(0, 0, innerWidth, innerHeight)
 
 	for(let n = 0; n < balls.length; n+=1) {	
@@ -167,9 +167,6 @@ function animate() {
 		var sizy = 500
 
 		var k = sizy/4
-		// if(balls[n+1]) {
-		// 	el.connect(balls[n+1])
-		// } 
 
 		var x = n
 
@@ -184,7 +181,9 @@ function animate() {
 		
 		// console.log(g);
 		
-		
+		// if(balls[n+1]) {
+		// 	el.connect(balls[n+1])
+		// } 
 		// eek+= Math.PI
 
 
