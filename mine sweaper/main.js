@@ -1,3 +1,4 @@
+
 var canvas = document.querySelector('canvas');
 const innerWidth = window.innerWidth
 const innerWHeight = window.innerHeight
@@ -7,37 +8,94 @@ var c = canvas.getContext('2d')
 
 
 
+const model = tf.sequential()
+
+model.add(tf.layers.dense({units: 256, inputShape: [6] } ) )
+model.add(tf.layers.dense({units: 256, inputShape: [2] } ) )
+
+model.add(tf.layers.dense({units: 3, inputShape: [2] } ) )
+
+
+const optimizer = tf.train.adam(0.001)
+
+model.compile({ 
+	optimizer: optimizer, 
+	loss: 'meanSquaredError'
+});
+
+var data = [
+	[
+		2,
+		2,
+		2,
+		2,
+		2,
+		2,
+	],
+	[
+		1,
+		1,
+		1,
+		1,
+		1,
+		1,
+
+	]
+]
+
+var ten2 = tf.tensor(data)
+
+
 const config = {
-	'size': 30,
-	'debug': false
+	'size': 20 ,
+	'debug': false,
+	'difficult': 1,
 }
+async function test() {
+
+	kek = await model.fit(ten2)
+	
+}
+	test()
 
 
 function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
+	this.is_bomb = is_bomb 
+	this.size = size
+	
+	
+	
+	
 	this.x = x
 	this.y = y
-	this.size = size
-	this.is_bomb = is_bomb 
 	this.nearBombs = nearBombs
 	this.is_shown = false
 	this.iX = iX
 	this.iY = iY
+
 	this.is_marked = false
 
 	this.mark = function() {
+
 		
 		if(!this.is_shown) {
 
 			if (!this.is_marked) {
-			// this.is_shown = true
-			this.is_marked = true
 
-			c.strokeStyle = '#ffffff'
-			c.beginPath()
-			c.moveTo(this.x, this.y)
-			c.lineTo(this.x + this.size/2, this.y + this.size/2)
-			c.closePath()
-			c.stroke()
+				
+				if(this.is_bomb ) {
+					
+
+				}
+
+				this.is_marked = true
+
+				c.strokeStyle = '#ffffff'
+				c.beginPath()
+				c.moveTo(this.x, this.y)
+				c.lineTo(this.x + this.size/2, this.y + this.size/2)
+				c.closePath()
+				c.stroke()
 			
 
 			} else {
@@ -126,7 +184,8 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 			c.fillText("you LOSE!!!", 300, 500)
 			c.stroke()
 			c.closePath()
-			this.reveal()
+
+			createField()
 		}
 
 		if(!this.is_shown && !this.is_bomb) {
@@ -179,29 +238,30 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 var balls = []
 var length = config.size
 
-var count = Math.pow(config.size, 2)
-
 
 
 function createField() {
+	firstPress = true
 	c = canvas.getContext('2d')
-	// console.log(c.fillStyle, c.strokeStyle);
-
-	
-	
+	c.beginPath()
+	c.fillStyle = '#000000'
+	c.strokeStyle = '#ffffff'
+	c.fillRect(0,0,innerWidth,innerHeight)
+	c.closePath()
 
 	for (let index = 0; index < length; index++) {
 		balls[index] = []
 		
 		for (let i2 = 0; i2 <= length-1; i2++) {
 			// places bommbs
-			let bomb = false
-			var chance = Math.floor(Math.random() * count)
-			
-			if(chance < 100){
+			var bomb = false
+			let chance = Math.pow(config.size, 2)
+			ranx = Math.floor(Math.random() * config.size)  
+			rany = Math.floor(Math.random() * config.size)  
+		
+			if (i2 == ranx) {
 				bomb = true
 			}
-			
 			
 
 			var width = innerHeight / length *2 
@@ -249,28 +309,22 @@ function clicky(x, y) {
 			by = ball.y
 
 			//checks x position of the mouseklick
-			if(bx <= x && bx + ball.size/2 > x){	
+			if(bx <= x-6 && bx + ball.size/2 > x){	
 				//checks y of mouseclick
-				if(by <= y && by + ball.size/2 > y){
+				if(by <= y-6 && by + ball.size/2 > y){
 
 					// if you land on a bomb on first press gets reset
 					if((ball.nearBombs > 0 || ball.is_bomb) && firstPress) {
-						console.log('kek');
-						c.beginPath()
-						c.fillStyle = '#000000'
-						c.strokeStyle = '#ffffff'
-						c.fillRect(0,0,innerWidth,innerHeight)
-						c.closePath()
 
-
-
-						firstPress = true
+						
 						createField()
-
+						firstPress = true
+						console.count('board reset');
+						
 						clicky(x, y)
 					} else{
-						ball.check()
 						firstPress = false
+						ball.check()
 					}
 					
 				}
@@ -327,4 +381,3 @@ window.oncontextmenu = function(e)
 	e.preventDefault()
     return false;     // cancel default menu
 }
-
