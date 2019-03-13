@@ -1,0 +1,12 @@
+html, body {
+	margin: 0;
+
+	overflow: hidden
+}
+
+#main {
+	width: 30%;
+	padding: 10% 35%;
+	/* margin: 0 auto; */
+	/* padding: 0; */
+}

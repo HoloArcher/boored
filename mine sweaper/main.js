@@ -5,13 +5,23 @@ const innerWHeight = window.innerHeight
 canvas.width = innerWidth
 canvas.height = innerWHeight
 var c = canvas.getContext('2d')
-
+const config = {
+	'size': 14 ,
+	'debug': false,
+	'difficult': 1,
+}
+var balls = []
+var length = config.size
+var total_bombs = 0
+var bombs_got = 0
+var placed_flags = 0
+var firstPress = true
 
 
 const model = tf.sequential()
 
-model.add(tf.layers.dense({units: 256, inputShape: [6] } ) )
-model.add(tf.layers.dense({units: 256, inputShape: [2] } ) )
+model.add(tf.layers.dense({units: 4, inputShape: [6] } ) )
+model.add(tf.layers.dense({units: 3,  } ) )
 
 model.add(tf.layers.dense({units: 3, inputShape: [2] } ) )
 
@@ -23,47 +33,24 @@ model.compile({
 	loss: 'meanSquaredError'
 });
 
-var data = [
-	[
-		2,
-		2,
-		2,
-		2,
-		2,
-		2,
-	],
-	[
-		1,
-		1,
-		1,
-		1,
-		1,
-		1,
-
-	]
+var data = [[2],[2]
 ]
 
 var ten2 = tf.tensor(data)
 
-
-const config = {
-	'size': 20 ,
-	'debug': false,
-	'difficult': 1,
-}
 async function test() {
-
 	kek = await model.fit(ten2)
-	
+	console.log(kek)
+
 }
-	test()
+
+test()
+
 
 
 function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 	this.is_bomb = is_bomb 
 	this.size = size
-	
-	
 	
 	
 	this.x = x
@@ -76,16 +63,18 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 	this.is_marked = false
 
 	this.mark = function() {
+		
 
 		
 		if(!this.is_shown) {
 
 			if (!this.is_marked) {
+				placed_flags+=1
 
 				
 				if(this.is_bomb ) {
+					bombs_got+=1
 					
-
 				}
 
 				this.is_marked = true
@@ -98,13 +87,24 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 				c.stroke()
 			
 
-			} else {
-				// this.is_shown = false
+			}
+			
+			else {
+					placed_flags-=1
+				
+				if(this.is_bomb ) {
+					bombs_got -=1
+				}
 				this.is_marked = false
 				this.draw()
 				
 			}
 		}
+		if((placed_flags == bombs_got) && (bombs_got == total_bombs)) {
+			alert('you win')
+		}
+		console.log(bombs_got,total_bombs, placed_flags )
+
 	}
 
 	this.addBomb = function() {
@@ -115,7 +115,6 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 	this.draw = function () {
 
 		if (config.debug) {
-			
 			if(this.is_bomb) { 
 				c.beginPath()
 				c.moveTo(this.x, this.y)
@@ -123,6 +122,7 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 				this.nearBombs = 0
 				c.closePath()
 			}
+
 			if(this.nearBombs) {
 				c.beginPath()
 				c.font = '20px calibri'
@@ -132,6 +132,8 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 				c.closePath()
 			}
 		}
+
+
 
 		if(this.is_shown && !this.is_marked) {
 			c.beginPath()
@@ -144,7 +146,9 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 		} else {
 			c.beginPath()
 			c.fillStyle = '#000000'
+			c.strokeStyle = '#ffffff'
 			c.fillRect(this.x, this.y, this.size/2, this.size/2)
+			c.rect(this.x, this.y, this.size, this.size)
 			c.stroke()
 			c.closePath()
 
@@ -188,7 +192,7 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 			createField()
 		}
 
-		if(!this.is_shown && !this.is_bomb) {
+		if(!this.is_shown && !this.is_bomb && !this.is_marked) {
 			this.is_shown = true
 	
 			if(this.nearBombs > 0) {
@@ -231,16 +235,10 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 	}
 }
 
-
-// creates a 2d array of Pience object and places bombs
-
-
-var balls = []
-var length = config.size
-
-
-
 function createField() {
+	total_bombs = 0
+	bombs_got = 0
+	placed_flags = 0
 	firstPress = true
 	c = canvas.getContext('2d')
 	c.beginPath()
@@ -258,9 +256,11 @@ function createField() {
 			let chance = Math.pow(config.size, 2)
 			ranx = Math.floor(Math.random() * config.size)  
 			rany = Math.floor(Math.random() * config.size)  
-		
-			if (i2 == ranx) {
+			console.log(i2, ranx);
+			
+			if (1 == ranx) {
 				bomb = true
+				total_bombs+=1
 			}
 			
 
@@ -295,8 +295,15 @@ function createField() {
 			}
 		}
 	}
+	
+for (let i = 0; i < balls.length; i++) {
+	const el = balls[i];
+	for (let n = 0; n < el.length; n++) {
+		el[n].draw()
+	}
 }
 
+}
 
 function clicky(x, y) {
 	for (let i = 0; i < balls.length; i++) {
@@ -357,26 +364,15 @@ function rightClick(x, y) {
 	}
 }
 
+
 createField()
 
 
 
-for (let i = 0; i < balls.length; i++) {
-	const el = balls[i];
-	for (let n = 0; n < el.length; n++) {
-		el[n].draw()
-	}
-}
-
-
-
-
 // onclick handler
-var firstPress = true
+
 document.getElementById('main').onclick = el => clicky(el.x, el.y)
-// document.getElementById('main').onclick = el => clicky(el.x, el.y)
-window.oncontextmenu = function(e)
-{
+window.oncontextmenu = function(e) {
 	rightClick(e.x, e.y)
 	e.preventDefault()
     return false;     // cancel default menu
