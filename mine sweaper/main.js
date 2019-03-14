@@ -6,10 +6,11 @@ canvas.width = innerWidth
 canvas.height = innerWHeight
 var c = canvas.getContext('2d')
 const config = {
-	'size': 14 ,
+	'size': 40 ,
 	'debug': false,
 	'difficult': 1,
 }
+
 var balls = []
 var length = config.size
 var total_bombs = 0
@@ -17,54 +18,36 @@ var bombs_got = 0
 var placed_flags = 0
 var firstPress = true
 
+var dlData = []
+
 
 const model = tf.sequential()
 
-model.add(tf.layers.dense({units: 4, inputShape: [6] } ) )
-model.add(tf.layers.dense({units: 3,  } ) )
+model.add(tf.layers.dense({units: 2, inputShape: [ 1 ] } ) )
+model.add(tf.layers.dense({units: 4, } ) ) //hidden layer
 
-model.add(tf.layers.dense({units: 3, inputShape: [2] } ) )
+model.add(tf.layers.dense({units: 2,  } ) )
 
 
-const optimizer = tf.train.adam(0.001)
+const optimizer = tf.train.sgd(0.1)
 
 model.compile({ 
 	optimizer: optimizer, 
 	loss: 'meanSquaredError'
 });
 
-var data = [[2],[2]
-]
-
-var ten2 = tf.tensor(data)
-
-async function test() {
-	kek = await model.fit(ten2)
-	console.log(kek)
-
-}
-
-test()
-
-
-
 function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 	this.is_bomb = is_bomb 
 	this.size = size
-	
-	
 	this.x = x
 	this.y = y
 	this.nearBombs = nearBombs
 	this.is_shown = false
 	this.iX = iX
 	this.iY = iY
-
 	this.is_marked = false
 
 	this.mark = function() {
-		
-
 		
 		if(!this.is_shown) {
 
@@ -103,7 +86,6 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 		if((placed_flags == bombs_got) && (bombs_got == total_bombs)) {
 			alert('you win')
 		}
-		console.log(bombs_got,total_bombs, placed_flags )
 
 	}
 
@@ -148,7 +130,7 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 			c.fillStyle = '#000000'
 			c.strokeStyle = '#ffffff'
 			c.fillRect(this.x, this.y, this.size/2, this.size/2)
-			c.rect(this.x, this.y, this.size, this.size)
+			c.rect(this.x, this.y, this.size/2, this.size/2)
 			c.stroke()
 			c.closePath()
 
@@ -207,7 +189,6 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 
 			//if no bombs it will recursivly check nearby fields
 			else if(this.nearBombs === 0) {
-				// console.trace(balls[iX+1][iY+1])
 				this.draw()
 				if(balls[iX-1]){
 					if (!balls[iX-1].is_shown) {
@@ -235,6 +216,8 @@ function Piece(x, y, size, is_bomb, nearBombs, iX, iY) {
 	}
 }
 
+
+// creates the field and adds bombs and counts ajacent bombs 
 function createField() {
 	total_bombs = 0
 	bombs_got = 0
@@ -254,11 +237,10 @@ function createField() {
 			// places bommbs
 			var bomb = false
 			let chance = Math.pow(config.size, 2)
-			ranx = Math.floor(Math.random() * config.size)  
-			rany = Math.floor(Math.random() * config.size)  
-			console.log(i2, ranx);
+			ran = Math.round(Math.random() * 10)  
+
 			
-			if (1 == ranx) {
+			if (ran < 2) {
 				bomb = true
 				total_bombs+=1
 			}
@@ -305,10 +287,14 @@ for (let i = 0; i < balls.length; i++) {
 
 }
 
+// eventhandler for leftclick
 function clicky(x, y) {
+	
+	// console.log(x, y);
+	
+	dlData.push([[x],[y]])
 	for (let i = 0; i < balls.length; i++) {
 		ballline = balls[i]
-
 
 		for (let n = 0; n < balls.length; n++) {
 			ball = ballline[n]
@@ -316,9 +302,9 @@ function clicky(x, y) {
 			by = ball.y
 
 			//checks x position of the mouseklick
-			if(bx <= x-6 && bx + ball.size/2 > x){	
+			if(bx-6 <= x && bx + ball.size/2-6 > x){	
 				//checks y of mouseclick
-				if(by <= y-6 && by + ball.size/2 > y){
+				if(by-6 <= y && by + ball.size/2-6 > y){
 
 					// if you land on a bomb on first press gets reset
 					if((ball.nearBombs > 0 || ball.is_bomb) && firstPress) {
@@ -338,8 +324,26 @@ function clicky(x, y) {
 			}
 		}
 	}
+
+	// balls.forEach(el => {
+	// 	el.forEach(el2 => {
+
+	// 		dlData.push([
+	// 			el.is_shown,
+	// 			el.nearBombs,
+	// 			el.is_marked,
+				
+	// 		])
+	// 		// console.log(el2.is_shown)
+
+
+
+	// 	})
+	// })
 }
 
+
+// eventhandler for rightclick
 function rightClick(x, y) {
 	
 	for (let i = 0; i < balls.length; i++) {
@@ -367,13 +371,58 @@ function rightClick(x, y) {
 
 createField()
 
-
-
 // onclick handler
-
 document.getElementById('main').onclick = el => clicky(el.x, el.y)
+
+// rightclick onclick
 window.oncontextmenu = function(e) {
 	rightClick(e.x, e.y)
 	e.preventDefault()
-    return false;     // cancel default menu
+	// cancel default menu
+	return false;     
 }
+// inputs / training data
+
+
+
+
+
+
+// var trainingdata = [
+// 	[//each field
+		
+// 	] 
+	
+// ]
+
+// // outputs
+// var data = [
+// 	[0.901],// x
+// 	[0.802],// y
+// 	[0] // left right click
+// ] 
+
+// function learn(data) {
+// 	if(learned > 10) {
+// 		//do the predict
+// 		model.predict(ten2).print()
+// 	} else {
+		
+
+// 	}
+// }
+
+
+
+// var ten2 = tf.tensor(data)
+
+
+
+// // model.fit(ten2, ten1)
+
+// // async function test() {
+// 	// 	kek = await model.fit(ten2)
+	
+// // }
+
+// // test()
