@@ -1,4 +1,3 @@
-
 var canvas = document.querySelector('canvas');
 const canvasHtml = document.getElementById('main')
 const canvasWidth = canvasHtml.clientWidth
@@ -73,29 +72,33 @@ function square(x, y, width, height, color) {
 
 			} else {
 
-				var condition = el.x < this.x + this.width && !(el.x < this.x)
-				var condition2 = this.x < (el.x + el.width) && !(this.x < el.x)
 
-				// var condition2 = el.y < this.y + this.height && !(el.y < this.y)
-				// var condition2 = el.y < this.y + this.height && !(el.y < this.y)
-				// var condition2 = canvasWidth - el.width
-
-				var ss = (this.width - Math.abs(canvasWidth - el.x - (canvasWidth - this.x)) < (el.width - Math.abs(canvasWidth - this.x - (canvasWidth - el.x))) ) 
-				? this.width - Math.abs(canvasWidth - el.x -  cmd
-					(canvasWidth - this.x)) 
-				: el.width- Math.abs(canvasWidth - this.x - (canvasWidth - el.x))
-
-		
+				// X axis checker if it overlaps
+				var conditionx1 = el.x < this.x + this.width && !(el.x < this.x)
+				var conditionx2 = this.x < (el.x + el.width) && !(this.x < el.x)
+				var extra = (this.x > el.x && this.x+ this.width < el.x + el.width)? Math.abs(this.width - Math.abs(canvasWidth - this.x -this.width - (canvasWidth - el.x))): 0
+				var ss = (this.x + this.width > el.width + el.x) ? Math.abs(canvasWidth - el.x - el.width - (canvasWidth - this.x)): Math.abs(canvasWidth - this.x -this.width - (canvasWidth - el.x )  ) - extra
 				var drawX = (el.x> this.x) ? el.x : this.x
 
-				if (condition || condition2) {
+				var conditiony1 = el.y < this.y + this.height && !(el.y < this.y)
+				var conditiony2 = this.y < (el.y + el.height) && !(this.y < el.y)
+
+				var eytra = (this.y > el.y && this.y+ this.height < el.y + el.height)? Math.abs(this.height - Math.abs(canvasHeight - this.y -this.height - (canvasHeight - el.y))): 0
+				var ww = (this.y + this.height > el.height + el.y) ? Math.abs(canvasHeight - el.y - el.height - (canvasHeight - this.y)): Math.abs(canvasHeight - this.y -this.height - (canvasHeight - el.y )  ) - eytra
+
+				var drawy = (el.y> this.y) ? el.y : this.y
+
+
+
+
+				// var drawX = el.x
+				// console.log((conditionx1 || conditionx2) && (conditiony1 || conditiony2))
+				if ((conditionx1 || conditionx2) && (conditiony1 || conditiony2))  {
 					
 					c.beginPath()
 					c.fillStyle = '#00ff00'
 					c.strokeStyle = '#00ff00'
-
-					c.rect(drawX, 250, ss, 14)
-
+					c.rect(drawX, drawy, ss, ww)
 					c.fill()
 					c.stroke()
 					c.closePath()
@@ -200,13 +203,15 @@ function ball(x, y, Vx, Vy, width, ttl) {
 // var testball = new ball(400, 100, 12, 3, 30, 2)
 // objects.push(testball)
 
-var obsticle = new square(300, 300, 220, 12, '#000000')
-objects.push(obsticle)
+// var obsticle = new square(300, 300, 220, 12, '#000000')
+// objects.push(obsticle)
 
-var obj = new square(200, 260, 122, 10, '#ff00ff')
+
+
+var kekk = new square(ran(0,500), ran(0,500), ran(10,300), ran(10,300), '#ff00ff')
+objects.push(kekk)
+var obj = new square(200, 260, 122, 102, '#ff00ff')
 objects.push(obj)
-
-
 
 
 
@@ -236,8 +241,8 @@ function animate() {
 			var el = objects[n]
 			// el.draw()
 			el.move()
-			el.detection()
 		}
+		obj.detection()
 
 		controlHandler(controls)
 
