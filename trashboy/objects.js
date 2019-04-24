@@ -1,7 +1,3 @@
-
-
-
-
 function object(x, y, width, height, color, collide) {
 	this.x = x
 	this.y = y
@@ -22,7 +18,7 @@ function object(x, y, width, height, color, collide) {
 		c.closePath()
 
 	}
-	
+
 	this.detect = function (obj) {
 		// console.log(obj)
 
@@ -36,25 +32,35 @@ function object(x, y, width, height, color, collide) {
 		// 	} else {
 
 
-		// 		// X axis checker if it overlaps
 
-		// Left side collition
-				var leftCondition = obj.x < this.x + this.width && !(obj.x < this.x)
-				var rightCondition = this.x < (obj.x + obj.width) && !(this.x < obj.x)
 		// 		var extra = (this.x > el.x && this.x+ this.width < el.x + el.width)? Math.abs(this.width - Math.abs(canvasWidth - this.x -this.width - (canvasWidth - el.x))): 0
-				
 		// 		var ss = (this.x + this.width > el.width + el.x) ? Math.abs(canvasWidth - el.x - el.width - (canvasWidth - this.x)): Math.abs(canvasWidth - this.x -this.width - (canvasWidth - el.x )  ) - extra
 		// 		var drawX = (el.x> this.x) ? el.x : this.x
 
 
-		// 		// Y axis checker if it overlaps
-				var topCondition = obj.y < this.y + this.height && !(obj.y < this.y)
-				var bottomCondition = this.y < (obj.y + obj.height) && !(this.y < obj.y)
+		// Y axis checker if it overlaps
+
+
+
 		// 		var eytra = (this.y > el.y && this.y+ this.height < el.y + el.height)? Math.abs(this.height - Math.abs(canvasHeight - this.y -this.height - (canvasHeight - el.y))): 0
-				
 		// 		var ww = (this.y + this.height > el.height + el.y) ? Math.abs(canvasHeight - el.y - el.height - (canvasHeight - this.y)): Math.abs(canvasHeight - this.y -this.height - (canvasHeight - el.y )  ) - eytra
 		// 		var drawy = (el.y> this.y) ? el.y : this.y
 
+
+
+		// Left side collition
+		var left = this.x + this.width < el.x
+		var right = this.x > el.x + el.width
+
+		var top = this.y + this.width < el.y
+		var bottom = this.y > el.y + el.width 
+
+ 
+		var topCondition = top 
+		// var topCondition = false
+		var leftCondition = left
+		var rightCondition = right
+		var bottomCondition = bottom
 
 		var returnObj = {
 			l: leftCondition,
@@ -62,13 +68,13 @@ function object(x, y, width, height, color, collide) {
 			t: topCondition,
 			b: bottomCondition,
 		}
-		
+
 		return returnObj
 
 		// 		// var drawX = el.x
 		// 		// console.log((conditionx1 || conditionx2) && (conditiony1 || conditiony2))
 		// 		if ((conditionx1 || conditionx2) && (conditiony1 || conditiony2))  {
-					
+
 		// 			c.beginPath()
 		// 			c.fillStyle = '#00ff00'
 		// 			c.strokeStyle = '#00ff00'
@@ -81,10 +87,10 @@ function object(x, y, width, height, color, collide) {
 		// 		} else {
 		// 			this.color = this.OGcolor
 		// 		}
-				
+
 		// 	}
 		// }
-		
+
 
 	}
 
@@ -93,15 +99,15 @@ function object(x, y, width, height, color, collide) {
 		this.y += y
 	}
 
-	this.move = function() {
+	this.move = function () {
 		// adds the velocity to the position
 		this.x += this.Vx
 		this.y += this.Vy
 
 
 		// reduced velocity by 10%
-		this.Vx*= 0.925
-		this.Vy*= 0.9
+		this.Vx *= 0.925
+		this.Vy *= 0.9
 
 		// this.draw()
 	}
@@ -138,15 +144,13 @@ function ball(x, y, Vx, Vy, width, ttl) {
 				this.is_touching = true
 				this.Vx *= -1
 				// this.x += this.Vx/10
-			}
-			else if (ySide) {
+			} else if (ySide) {
 				this.Vy *= -1
 
 				this.is_touching = true
 
 				// this.y += this.Vy/10
-			}
-			else {
+			} else {
 				this.is_touching = false
 			}
 

@@ -58,7 +58,8 @@ function controlHandler() {
 
 document.addEventListener('keydown', el => { 
 	controls[el.keyCode] = true; 
-	console.log(el.keyCode)
+	// console.log(el.keyCode)
+	// animate()
 	
 })
 document.addEventListener('keyup', el => { 

@@ -16,3 +16,7 @@ var config = {
 	runspeed: 0.35,
 	jumpspeed: 0.2
 }
+
+var objects = []
+
+
